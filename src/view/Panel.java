@@ -22,11 +22,11 @@ public class Panel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public final ImageIcon empty = new ImageIcon(this.getClass().getResource("/resim/empty.png"));
-	public final ImageIcon full = new ImageIcon(this.getClass().getResource("/resim/full.png"));
-	public final ImageIcon ball = new ImageIcon(this.getClass().getResource("/resim/ball.png"));
-	public final ImageIcon destination = new ImageIcon(this.getClass().getResource("/resim/finish.png"));
-	public final ImageIcon passed = new ImageIcon(this.getClass().getResource("/resim/passed.png"));
+	public final ImageIcon empty = new ImageIcon(this.getClass().getResource("/image/empty.png"));
+	public final ImageIcon full = new ImageIcon(this.getClass().getResource("/image/full.png"));
+	public final ImageIcon ball = new ImageIcon(this.getClass().getResource("/image/ball.png"));
+	public final ImageIcon destination = new ImageIcon(this.getClass().getResource("/image/finish.png"));
+	public final ImageIcon passed = new ImageIcon(this.getClass().getResource("/image/passed.png"));
 
 	public final ArrayList<Pixels> pixels = new ArrayList<>();
 	final int startX = 300;
