@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import intelligence.YapayZeka;
+import intelligence.ArtificialIntelligence;
 
 public class Panel extends JPanel {
 
@@ -22,34 +22,34 @@ public class Panel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public final ImageIcon bos = new ImageIcon(this.getClass().getResource("/resim/bos.png"));
-	public final ImageIcon dolu = new ImageIcon(this.getClass().getResource("/resim/dolu.png"));
-	public final ImageIcon top = new ImageIcon(this.getClass().getResource("/resim/top.png"));
-	public final ImageIcon hedef = new ImageIcon(this.getClass().getResource("/resim/finish.png"));
+	public final ImageIcon empty = new ImageIcon(this.getClass().getResource("/resim/empty.png"));
+	public final ImageIcon full = new ImageIcon(this.getClass().getResource("/resim/full.png"));
+	public final ImageIcon ball = new ImageIcon(this.getClass().getResource("/resim/ball.png"));
+	public final ImageIcon destination = new ImageIcon(this.getClass().getResource("/resim/finish.png"));
 	public final ImageIcon passed = new ImageIcon(this.getClass().getResource("/resim/passed.png"));
 
 	public final ArrayList<Pixels> pixels = new ArrayList<>();
 	final int startX = 300;
 	final int startY = 20;
-	public final int labirentSize = 8;
-	private boolean ornek;
+	public final int mazeSize = 8;
+	private boolean sample;
 
-	YapayZeka yapayZeka;
+	ArtificialIntelligence artificialIntelligence;
 	Intro intro;
 
-	JTextArea sonuc;
+	JTextArea result;
 
 	public Panel() {
 		super();
 		this.setLayout(null);
 		drawThings();
 		drawMap();
-		yapayZeka = new YapayZeka(this);
+		artificialIntelligence = new ArtificialIntelligence(this);
 		intro = new Intro();
 	}
 
 	public void initFrame() {
-		JFrame frame = new JFrame("Labirentte en kısa yol bulma");
+		JFrame frame = new JFrame("Maze Shortest Path");
 
 		frame.add(this);
 
@@ -62,10 +62,10 @@ public class Panel extends JPanel {
 
 	private void drawMap() {
 
-		for (int i = 0; i < labirentSize; i++) {
-			for (int j = 0; j < labirentSize; j++) {
+		for (int i = 0; i < mazeSize; i++) {
+			for (int j = 0; j < mazeSize; j++) {
 				final Pixels button = new Pixels();
-				button.setIcon(bos);
+				button.setIcon(empty);
 				button.setBorder(null);
 				button.setBorderPainted(false);
 				button.setBounds(startX + j * 40, startY + i * 40, 39, 39);
@@ -78,41 +78,41 @@ public class Panel extends JPanel {
 						super.mouseReleased(e);
 						if (e.getButton() == MouseEvent.BUTTON2) {
 							for (int k = 0; k < pixels.size(); k++) {
-								if (pixels.get(k).getIcon().equals(top)) {
-									if (pixels.get(k).equals(button) || button.getIcon().equals(dolu)
-											|| button.getIcon().equals(hedef))
+								if (pixels.get(k).getIcon().equals(ball)) {
+									if (pixels.get(k).equals(button) || button.getIcon().equals(full)
+											|| button.getIcon().equals(destination))
 										break;
-									pixels.get(k).setIcon(bos);
+									pixels.get(k).setIcon(empty);
 									break;
 								}
 							}
 
-							if (button.getIcon().equals(bos))
-								button.setIcon(top);
-							else if (button.getIcon().equals(top)) {
-								button.setIcon(bos);
+							if (button.getIcon().equals(empty))
+								button.setIcon(ball);
+							else if (button.getIcon().equals(ball)) {
+								button.setIcon(empty);
 							}
 
 						} else if (e.getButton() == MouseEvent.BUTTON3) {
 							for (int k = 0; k < pixels.size(); k++) {
-								if (pixels.get(k).getIcon().equals(hedef)) {
-									if (pixels.get(k).equals(button) || button.getIcon().equals(dolu)
-											|| button.getIcon().equals(top))
+								if (pixels.get(k).getIcon().equals(destination)) {
+									if (pixels.get(k).equals(button) || button.getIcon().equals(full)
+											|| button.getIcon().equals(ball))
 										break;
-									pixels.get(k).setIcon(bos);
+									pixels.get(k).setIcon(empty);
 									break;
 								}
 							}
-							if (button.getIcon().equals(bos))
-								button.setIcon(hedef);
-							else if (button.getIcon().equals(hedef))
-								button.setIcon(bos);
+							if (button.getIcon().equals(empty))
+								button.setIcon(destination);
+							else if (button.getIcon().equals(destination))
+								button.setIcon(empty);
 
 						} else if (e.getButton() == MouseEvent.BUTTON1) {
-							if (button.getIcon().equals(bos))
-								button.setIcon(dolu);
-							else if (button.getIcon().equals(dolu))
-								button.setIcon(bos);
+							if (button.getIcon().equals(empty))
+								button.setIcon(full);
+							else if (button.getIcon().equals(full))
+								button.setIcon(empty);
 						}
 
 					}
@@ -132,7 +132,7 @@ public class Panel extends JPanel {
 	}
 
 	private void drawThings() {
-		JButton start = new JButton("Başla");
+		JButton start = new JButton("Start");
 		start.setBounds(50, 20, start.getPreferredSize().width, start.getPreferredSize().height);
 		start.addActionListener(new ActionListener() {
 
@@ -140,37 +140,37 @@ public class Panel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				int[] points = getStartAndEnd();
 				if (points[0] == -1)
-					JOptionPane.showMessageDialog(null, "Başlangıç noktası belirleyin");
+					JOptionPane.showMessageDialog(null, "Determine a start point");
 				else if (points[1] == -1)
-					JOptionPane.showMessageDialog(null, "Bitiş noktası belirleyin");
+					JOptionPane.showMessageDialog(null, "Determine an end point");
 				else {
-					sonuc.setText("");
+					result.setText("");
 					clearPassed();
 					resetMap();
-					yapayZeka.start();
+					artificialIntelligence.start();
 				}
 
 			}
 		});
 		add(start);
 
-		JButton sample = new JButton("Örnek Labirent");
-		sample.setBounds(50, 50, sample.getPreferredSize().width, sample.getPreferredSize().height);
-		sample.addActionListener(new ActionListener() {
+		JButton sampleMaze = new JButton("Sample Maze");
+		sampleMaze.setBounds(50, 50, sampleMaze.getPreferredSize().width, sampleMaze.getPreferredSize().height);
+		sampleMaze.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				clearMap();
-				if (ornek)
+				if (sample)
 					drawMySample();
 				else
 					drawSampleLabyrinth();
-				ornek = !ornek;
+				sample = !sample;
 
 			}
 		});
-		add(sample);
+		add(sampleMaze);
 
-		JButton clear = new JButton("Haritayı temizle");
+		JButton clear = new JButton("Clear Map");
 		clear.setBounds(50, 80, clear.getPreferredSize().width, clear.getPreferredSize().height);
 		clear.addActionListener(new ActionListener() {
 			@Override
@@ -180,27 +180,27 @@ public class Panel extends JPanel {
 		});
 		add(clear);
 
-		JButton introB = new JButton("Hakkımızda");
+		JButton introB = new JButton("About Me");
 		introB.setBounds(50, 110, introB.getPreferredSize().width, introB.getPreferredSize().height);
 		introB.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				clearMap();
-				intro.generate(pixels, labirentSize);
+				intro.generate(pixels, mazeSize);
 			}
 		});
 		add(introB);
 
-		sonuc = new JTextArea();
-		sonuc.setEditable(false);
-		sonuc.setBackground(getBackground());
-		add(sonuc);
+		result = new JTextArea();
+		result.setEditable(false);
+		result.setBackground(getBackground());
+		add(result);
 
 		JTextArea not = new JTextArea();
 		not.setEditable(false);
 		not.setBackground(getBackground());
-		not.setText("Not : Farenin sol tuşu duvarları, orta tuş başlangıç noktasını , sağ tuş ise hedef noktasını"
-				+ " ekrana çizdiriyor.\n\t İsterseniz örnek olarak çizlimiş labirenti kullanabilirsiniz.");
+		not.setText("Note : Left mouse click draws walls, middle click draws start point and right click draws destination point on the map."
+				+ "\n\t If you wish, you can use sample map also.");
 		not.setBounds(30, 400, not.getPreferredSize().width, not.getPreferredSize().height);
 		add(not);
 	}
@@ -208,9 +208,9 @@ public class Panel extends JPanel {
 	public int[] getStartAndEnd() {
 		int start = -1, end = -1;
 		for (int k = 0; k < pixels.size(); k++) {
-			if (pixels.get(k).getIcon().equals(hedef)) {
+			if (pixels.get(k).getIcon().equals(destination)) {
 				end = k;
-			} else if (pixels.get(k).getIcon().equals(top)) {
+			} else if (pixels.get(k).getIcon().equals(ball)) {
 				start = k;
 			}
 			if (start != -1 && end != -1)
@@ -223,34 +223,34 @@ public class Panel extends JPanel {
 		int[] borders = new int[] { 6, 9, 10, 11, 12, 20, 21, 22, 24, 26, 28, 30, 32, 33, 36, 38, 43, 49, 51, 52, 53,
 				54, 57, 62 };
 		for (int i : borders) {
-			pixels.get(i).setIcon(dolu);
+			pixels.get(i).setIcon(full);
 		}
-		pixels.get(56).setIcon(top);
-		pixels.get(29).setIcon(hedef);
+		pixels.get(56).setIcon(ball);
+		pixels.get(29).setIcon(destination);
 	}
 
 	private void drawMySample() {
 		int[] borders = new int[] { 4, 8, 10, 12, 16, 20, 25, 27, 32, 36, 42, 44, 48, 52, 56, 57, 58, 59 };
 		for (int i : borders) {
-			pixels.get(i).setIcon(dolu);
+			pixels.get(i).setIcon(full);
 		}
-		pixels.get(0).setIcon(top);
-		pixels.get(40).setIcon(hedef);
+		pixels.get(0).setIcon(ball);
+		pixels.get(40).setIcon(destination);
 	}
 
 	private void clearMap() {
 		for (Pixels pixel : pixels) {
-			if (!pixel.getIcon().equals(bos)) {
-				pixel.setIcon(bos);
+			if (!pixel.getIcon().equals(empty)) {
+				pixel.setIcon(empty);
 			}
 		}
 	}
 
 	public void clearPassed() {
-		sonuc.setText("");
+		result.setText("");
 		for (Pixels pixel : pixels) {
 			if (pixel.getIcon().equals(passed)) {
-				pixel.setIcon(bos);
+				pixel.setIcon(empty);
 			}
 		}
 	}
@@ -262,12 +262,12 @@ public class Panel extends JPanel {
 			}
 	}
 
-	public void showResult(boolean dolu, int min, int adim) {
-		if (dolu)
-			sonuc.setText("Haritada toplam " + adim + " adım atıldı\n\nEn kısa yol " + min + " adım uzaklıkta");
+	public void showResult(boolean full, int min, int adim) {
+		if (full)
+			result.setText(adim + " steps was taken totally on the map\n\nThe shortest path is far as much as " + min + " steps");
 		else
-			sonuc.setText("Sonuç bulunamadı");
-		sonuc.setBounds(30, 160, sonuc.getPreferredSize().width, sonuc.getPreferredSize().height);
+			result.setText("No result");
+		result.setBounds(30, 160, result.getPreferredSize().width, result.getPreferredSize().height);
 	}
 
 }

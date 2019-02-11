@@ -1,0 +1,12 @@
+destination=5000
+
+hero:
+hp=1000
+attack=10
+
+enemy:
+type=bug,lion,zombie
+hp=50,10,300
+attack=2,15,7
+count=2,2,2
+position=276,489,1527,2865,1681,3523

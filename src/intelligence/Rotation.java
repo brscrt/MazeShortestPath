@@ -1,9 +1,9 @@
 package intelligence;
 
 public enum Rotation {
-yukari,
-sag,
-asagi,
-sol,
-hedef
+up,
+right,
+down,
+left,
+destination
 }

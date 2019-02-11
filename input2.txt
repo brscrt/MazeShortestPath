@@ -1,0 +1,12 @@
+destination=7500
+
+hero:
+hp=500
+attack=9
+
+enemy:
+type=zombiedog,mutant,zombie
+hp=75,400,300
+attack=10,8,7
+count=2,2,1
+position=1897,486,5332,274,1687
